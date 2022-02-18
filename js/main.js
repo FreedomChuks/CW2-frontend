@@ -50,7 +50,7 @@ var app = new Vue ({
         },
         submitForm(user) {
             alert('Cheers '+ user.name + ' ,your order has been successfully submitted');   
-        },
+        }
     },
     computed: {
         //returns length of the cart items
@@ -112,16 +112,13 @@ var app = new Vue ({
                 }
                     //sort 'productArray' array and return it
                     return this.lessons.sort(compare);
-            },
+            }
     },
-    created: function () {
-        //Fetch Lessons from server 
-        fetch("https://cw2-backends.herokuapp.com/collection/lessons").then(
-            function (response) {
-                response.json().then(
-                    function (data) {
-                        el.lessons = data;
-                    });
-            })
-    }
+    async created() {
+        // GET request using fetch with async/await
+        const response = await fetch("https://cw2-backends.herokuapp.com/collection/lessons");
+        const data = await response.json();
+        console.log(data)
+        this.lessons = data;
+      }
 })
