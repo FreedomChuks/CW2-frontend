@@ -116,7 +116,7 @@ var app = new Vue ({
 
             created: function () {
                 //Fetch Lessons from server 
-                fetch("https://cw2-backends.herokuapp.com/collection/lesson").then(
+                fetch("https://cw2-backends.herokuapp.com/collection/lessons").then(
                     function (response) {
                         response.json().then(
                             function (data) {
