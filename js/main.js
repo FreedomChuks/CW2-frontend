@@ -9,7 +9,7 @@ var app = new Vue ({
             name: '',
             phone: '',
         },
-        lessons: lessons,
+        lessons:[],
         cart: [],
         sort: {
             sortingMethod: "location",
@@ -113,5 +113,16 @@ var app = new Vue ({
                     //sort 'productArray' array and return it
                     return this.lessons.sort(compare);
             },
+
+            created: function () {
+                //Fetch Lessons from server 
+                fetch("https://cw2-backends.herokuapp.com/collection/lesson").then(
+                    function (response) {
+                        response.json().then(
+                            function (data) {
+                                el.lessons = data;
+                            });
+                    })
+            }
     }
 })
