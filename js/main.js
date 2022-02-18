@@ -18,12 +18,34 @@ var app = new Vue ({
     },
     methods: {
         // Adds Product to cart
-        addToCart: function (lesson) {
-            this.cart.push(lesson);    
+        addToCart: function (_id) {
+            const itemIndex = this.cart.findIndex(item => item._id === _id);
+            if (itemIndex != -1) {
+                this.cart[itemIndex].availablespace += 1;
+            } else {
+                this.cart.push({ _id: _id, availablespace: 1 });
+            }
         },
+        addLessonToCart: function (_id) {
+            console.log("inside");
+                const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
+                if (lessonIndex != -1) {
+                    this.lessons[lessonIndex].availablespace -= 1;
+                    this.addToCart(_id);
+                }
+            },
         // Removes an item from the cart
-        removeFromCart: function(lesson, cart){
-            this.cart.splice(this.cart.indexOf(lesson), 1);
+        removeFromCart: function(index){
+            this.cart[index].availablespace = this.cart[index].availablespace - 1;
+            const lessonIndex = this.lessons.findIndex(lesson => lesson._id === this.cart[index]._id);
+            if (lessonIndex != -1) {
+                this.lessons[lessonIndex].availablespace += 1;
+            }
+            if (this.cart[index].availablespace == 0) {
+                this.cart.splice(index, 1);
+            }
+
+            console.log(this.cart);
         },
         // Checks the amount of each product in the cart
         canAddToCart(lesson){
@@ -45,7 +67,7 @@ var app = new Vue ({
         },
         // Search For lessons
         searchLessons: function(){
-            this.lessons = lessons;
+            // this.lessons = lessons;
             this.lessons = this.lessons.filter(lesson => lesson.subject.toLowerCase().includes(this.term) == true || lesson.location.toLowerCase().includes(this.term));
         },
         fetchLesson: function (_id) {
@@ -83,6 +105,7 @@ var app = new Vue ({
                     .then(response => response.json())
                     .then(responseJSON => {
                         console.log('Success:', responseJSON);
+                        submitForm()
                     });
             }
 
@@ -96,7 +119,8 @@ var app = new Vue ({
             this.cart = [];
 
 
-        }
+        },
+        
     },
     computed: {
         //returns length of the cart items

@@ -100,12 +100,11 @@
                             <h6>Location: {{lesson.location}}</h6>
                             <h6>Available: {{lesson.availablespace - cartCount(lesson)}}</h6>
                             <h6>Price: £{{lesson.price}}</h6>
-                            <h6>Rating:
                               <h6>Rating: 
                                 <span v-for="n in lesson.rating">★</span>
                                 <span v-for="n in 5 - lesson.rating">☆</span>
                             </h6>
-                            <button v-on:click="addToCart(lesson)" v-if="canAddToCart(lesson)" class="add_to_card-btn btn">Add to Cart</button>
+                            <button v-on:click="addLessonToCart(lesson._id)" v-if="canAddToCart(lesson)" class="add_to_card-btn btn">Add to Cart</button>
                             <!-- disable cart -->
                             <button class="btn add_to_card-btn" v-else="lesson.availablespace === cartCount(lesson.id)" v-bind:disabled="!canAddToCart(lesson)">Add to Cart</button>
                             <!-- End of disable cart -->
@@ -124,14 +123,14 @@
         <h2 class="text-center mt-5 mb-5">{{cartpage}}</h2>
         <div class="container">
             <div class="row">
-                <div v-for="lesson in cart" class="col-md-3 mb-4">
+                <div v-for="(lesson, index) in cart" class="col-md-3 mb-4">
                     <div class="card">
-                      <img class="card-img" v-bind:src="`https://cw2-backends.herokuapp.com/${fetchLesson(lesson.lessonID).image}`" alt="Lesson Image">
+                      <img class="card-img" v-bind:src="`https://cw2-backends.herokuapp.com/${fetchLesson(lesson._id).image}`" alt="Lesson Image">
                         <div class="card-body">
-                          <h6>Subject: {{fetchLesson(lesson.lessonID).subject}}</h6>
-                          <h6>Location: {{fetchLesson(lesson.lessonID).location}}</h6>
-                          <h6>Price: £{{fetchLesson(lesson.lessonID).price}}</h6>
-                            <button v-on:click="removeFromCart(lesson, cart)" class="btn add_to_card-btn">Remove from Cart</button>
+                          <h6>Subject: {{fetchLesson(lesson._id).subject}}</h6>
+                          <h6>Location: {{fetchLesson(lesson._id).location}}</h6>
+                          <h6>Price: £{{fetchLesson(lesson._id).price}}</h6>
+                            <button v-on:click="removeFromCart(index)" class="btn add_to_card-btn">Remove from Cart</button>
                         </div>
                     </div>
                 </div>
