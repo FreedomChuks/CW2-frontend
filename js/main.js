@@ -48,8 +48,54 @@ var app = new Vue ({
             this.lessons = lessons;
             this.lessons = this.lessons.filter(lesson => lesson.subject.toLowerCase().includes(this.term) == true || lesson.location.toLowerCase().includes(this.term));
         },
+        fetchLesson: function (_id) {
+            const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
+            if (lessonIndex == -1) {
+                return;
+            }
+            return this.lessons[lessonIndex];
+        },
         submitForm(user) {
             alert('Cheers '+ user.name + ' ,your order has been successfully submitted');   
+        },
+        checkOut: function () {
+            fetch('https://cw2-backends.herokuapp.com/collection/order', {
+                method: 'POST', // set the HTTP method as 'POST'
+                headers: {
+                    'Content-Type': 'application/json', // set the data type as JSON
+                },
+                body: JSON.stringify({ name: this.user.name, phone: this.user.phone, lessons: this.cart }), // need to stringify the JSON object
+            })
+                .then(response => response.json())
+                .then(responseJSON => {
+                    console.log('Success:', responseJSON);
+                });
+
+            for (let index = 0; index < this.cart.length; index++) {
+                const lesson = this.fetchLesson(this.cart[index].lessonID);
+                fetch(`https://cw2-backends.herokuapp.com/collection/lesson/${lesson._id}`, {
+                    method: 'PUT', // set the HTTP method as 'POST'
+                    headers: {
+                        'Content-Type': 'application/json', // set the data type as JSON
+                    },
+                    body: JSON.stringify({ availablespace: lesson.availablespace }), // need to stringify the JSON object
+                })
+                    .then(response => response.json())
+                    .then(responseJSON => {
+                        console.log('Success:', responseJSON);
+                    });
+            }
+
+            swal({
+                title: "Check out successful",
+                text: "Your order has been submitted",
+                icon: "success",
+            });
+
+            this.showProduct = true;
+            this.cart = [];
+
+
         }
     },
     computed: {
@@ -112,7 +158,9 @@ var app = new Vue ({
                 }
                     //sort 'productArray' array and return it
                     return this.lessons.sort(compare);
-            }
+            },
+            
+            
     },
     created() {
         fetch("https://cw2-backends.herokuapp.com/collection/lessons")
