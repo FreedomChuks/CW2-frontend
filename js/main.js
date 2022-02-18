@@ -114,11 +114,9 @@ var app = new Vue ({
                     return this.lessons.sort(compare);
             }
     },
-    async created() {
-        // GET request using fetch with async/await
-        const response = await fetch("https://cw2-backends.herokuapp.com/collection/lessons");
-        const data = await response.json();
-        console.log(data)
-        this.lessons = data;
+    created() {
+        fetch("https://cw2-backends.herokuapp.com/collection/lessons")
+        .then(response => response.json())
+        .then(data => (this.lessons = data));
       }
 })
