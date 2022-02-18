@@ -113,16 +113,15 @@ var app = new Vue ({
                     //sort 'productArray' array and return it
                     return this.lessons.sort(compare);
             },
-
-            created: function () {
-                //Fetch Lessons from server 
-                fetch("https://cw2-backends.herokuapp.com/collection/lessons").then(
-                    function (response) {
-                        response.json().then(
-                            function (data) {
-                                el.lessons = data;
-                            });
-                    })
-            }
+    },
+    created: function () {
+        //Fetch Lessons from server 
+        fetch("https://cw2-backends.herokuapp.com/collection/lessons").then(
+            function (response) {
+                response.json().then(
+                    function (data) {
+                        el.lessons = data;
+                    });
+            })
     }
 })
